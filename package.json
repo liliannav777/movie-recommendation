@@ -2,7 +2,7 @@
   "name": "movie-recommendation",
   "version": "1.0.0",
   "scripts": {
-    "start": "concurrently \"npm run serve --prefix frontend\" \"npm run start --prefix backend\""
+    "start": "concurrently \"npm run serve --prefix frontend-movie\" \"npm run start --prefix backend-movie\""
   },
   "devDependencies": {
     "concurrently": "^7.6.0",

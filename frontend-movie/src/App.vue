@@ -3,7 +3,7 @@
     <div class="gradient-overlay"></div>
     <div class="content">
       <h1 class="title">🎬 Ciné Passion</h1>
-      <router-view></router-view> <!-- Affiche le composant en fonction de la route -->
+      <router-view></router-view>
     </div>
   </div>
 </template>
