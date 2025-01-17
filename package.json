@@ -1,0 +1,11 @@
+{
+  "name": "movie-recommendation",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "concurrently \"npm run serve --prefix frontend\" \"npm run start --prefix backend\""
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0",
+    "webpack": "^5.97.1"
+  }
+}
