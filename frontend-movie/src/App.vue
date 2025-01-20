@@ -2,15 +2,24 @@
   <div class="app">
     <div class="gradient-overlay"></div>
     <div class="content">
+      <AppNavbar />
       <h1 class="title">🎬 Ciné Passion</h1>
       <router-view></router-view>
+      <AppFooter />
     </div>
   </div>
 </template>
 
 <script>
+import AppNavbar from './components/Navbar.vue';
+import AppFooter from './components/Footer.vue';
+
 export default {
   name: 'App',
+  components: {
+    AppNavbar,
+    AppFooter
+  }
 };
 </script>
 

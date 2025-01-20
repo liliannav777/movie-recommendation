@@ -13,6 +13,10 @@
           <p class="movie-release-date">Date de sortie : {{ movie?.release_date }}</p>
           <p class="movie-rating">Note : {{ movie?.vote_average?.toFixed(1) }}/10</p>
           <p class="movie-genres">Genres : {{ movie?.genres?.map(genre => genre.name).join(', ') }}</p>
+          <button @click="toggleFavorite" class="favorite-button" :class="{ 'is-favorite': isFavorite }">
+            <span class="star">&#9733;</span>
+            {{ isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris' }}
+          </button>
           <router-link to="/" class="back-button">Retour à la liste</router-link>
         </div>
       </div>
@@ -32,11 +36,13 @@ export default {
       trailer: null,
       movie: null,
       loading: true,
+      isFavorite: false,
     };
   },
   mounted() {
     this.fetchMovieDetails();
     this.fetchTrailer();
+    this.checkIfFavorite();
   },
   computed: {
     trailerUrl() {
@@ -69,6 +75,41 @@ export default {
       return posterPath
           ? `https://image.tmdb.org/t/p/w500${posterPath}`
           : 'https://via.placeholder.com/500x750?text=No+Poster';
+    },
+    async checkIfFavorite() {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      try {
+        const response = await axios.get('http://localhost:3000/favorites', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        this.isFavorite = response.data.includes(this.movie.id.toString());
+      } catch (error) {
+        console.error('Erreur lors de la vérification des favoris', error);
+      }
+    },
+    async toggleFavorite() {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Veuillez vous connecter pour ajouter des favoris');
+        return;
+      }
+
+      try {
+        const response = await axios.post('http://localhost:3000/favorites',
+            { movieId: this.movie.id },
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        if (response.status === 200) {
+          this.isFavorite = !this.isFavorite;
+          alert(this.isFavorite ? 'Film ajouté aux favoris' : 'Film retiré des favoris');
+        }
+      } catch (error) {
+        console.error('Erreur lors de la modification des favoris', error);
+        alert('Erreur lors de la modification des favoris');
+      }
     },
   },
 };
@@ -238,6 +279,32 @@ body {
 
 .trailer-container iframe:hover {
   transform: scale(1.02);
+}
+
+.favorite-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: var(--secondary-color);
+  color: var(--background-color);
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.favorite-button:hover {
+  background-color: var(--primary-color);
+}
+
+.favorite-button.is-favorite {
+  background-color: var(--primary-color);
+}
+
+.star {
+  font-size: 1.2rem;
+  margin-right: 0.5rem;
 }
 
 </style>
